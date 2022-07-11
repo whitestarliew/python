@@ -1,5 +1,5 @@
-calculation_to_units = 24
-name_of_unit = "hours"
+calculation_to_units = 24*60
+name_of_unit = "minutes"
 
 def days_to_units(num_of_days):
     if num_of_days > 0:
@@ -11,6 +11,7 @@ def days_to_units(num_of_days):
 
 def validate_and_execute():
     if user_input.isdigit():
+        #Nested IF/Else Statement 
         user_input_number = int(user_input)
         if user_input_number > 0:
             calculated_value = days_to_units(user_input_number)
@@ -20,7 +21,7 @@ def validate_and_execute():
     else:
         print("Your input is not a number ")
 
-user_input = input(" Hey sir, kindly enter a number \n ")
+user_input = input(" Hey sir, kindly enter a valid \n ")
 validate_and_execute()
 
 
