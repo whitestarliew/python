@@ -1,5 +1,5 @@
-calculation_to_units = 24*60*60
-name_of_unit = "minutes"
+calculation_to_units = 1*4.2
+Currency = "MYR"
 
 def days_to_units(num_of_days):
     if num_of_days > 0:
