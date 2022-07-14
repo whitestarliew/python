@@ -1,4 +1,4 @@
-calculation_to_units = 24*60
+calculation_to_units = 24*60*60
 name_of_unit = "minutes"
 
 def days_to_units(num_of_days):
