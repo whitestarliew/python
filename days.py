@@ -1,9 +1,9 @@
 calculation_to_units = 1*4.2
 Currency = "MYR"
 
-def days_to_units(num_of_days):
+def ringgitmalaysia(num_of_usdollar):
     if num_of_days > 0:
-        return f"{num_of_days} days are {num_of_days * calculation_to_units} {name_of_unit}"
+        return f"{num_of_usdollar} dollar are {num_of_usdollar * calculation_to_units} {currency}"
     # elif num_of_days == 0:
     #     return "You enter a Zero number"
     # else:
@@ -17,11 +17,11 @@ def validate_and_execute():
             calculated_value = days_to_units(user_input_number)
             print(calculated_value)
         elif user_input_number == 0:
-            print("You enter zero,use another number")
+            print("This is not amount of US dollar")
     else:
         print("Your input is not a number ")
 
-user_input = input(" Hey sir, kindly enter a valid \n ")
+user_input = input(" How much of US dollar you want? \n ")
 validate_and_execute()
 
 
