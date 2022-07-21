@@ -1,2 +1,4 @@
-for i in range(4,9):
+sport_cars = [ "bugatti","koenigsegg","ferrari"]
+
+for i in sport_cars:
     print (i)
