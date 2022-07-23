@@ -2,7 +2,7 @@ calculation_to_units = 1*4.2
 Currency = "MYR"
 
 def ringgitmalaysia(num_of_usdollar):
-    if num_of_days > 0:
+    if num_of_usdollar > 0:
         return f"{num_of_usdollar} dollar are {num_of_usdollar * calculation_to_units} {currency}"
     # elif num_of_days == 0:
     #     return "You enter a Zero number"
