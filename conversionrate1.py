@@ -2,7 +2,7 @@ conversion_usdollar = 4.4
 currency_unit = "MYR"
 
 def newnumber(amount_of_dollar):
-    if amount_of_dollar => 0:
+    if amount_of_dollar > 0:
         return f" You have {amount_of_dollar} ,that is equal to {conversion_usdollar * amount_of_dollar} {currency_unit} "
     elif amount_of_dollar < 0:
         return "it is not a valid amount"
