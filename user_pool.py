@@ -1,39 +1,32 @@
 import boto3
 
-# Set your AWS region and Cognito User Pool ID
-region = 'YOUR_AWS_REGION'
-user_pool_id = 'YOUR_USER_POOL_ID'
+# Set your AWS SSO region
+sso_region = 'eu-west-2'
 
-# Set the username and password for the user you want to authenticate
-username = 'YOUR_USERNAME'
-password = 'YOUR_PASSWORD'
+# Set the AWS SSO start URL and AWS CLI named profile
+sso_start_url = 'YOUR_SSO_START_URL'
+profile_name = 'YOUR_PROFILE_NAME'
 
-# Create a Cognito identity provider client
-client = boto3.client('cognito-idp', region_name=region)
+# Create an SSO client
+sso_client = boto3.client('sso', region_name=sso_region)
 
 try:
-    # Authenticate with the Cognito User Pool
-    response = client.initiate_auth(
-        ClientId='YOUR_APP_CLIENT_ID',
-        AuthFlow='USER_PASSWORD_AUTH',
-        AuthParameters={
-            'USERNAME': username,
-            'PASSWORD': password
-        }
+    # Get the SSO user access token
+    response = sso_client.get_role_credentials(
+        roleName='YOUR_ROLE_NAME',
+        account='your-aws-account-id',
+        accessToken='YOUR_SSO_ACCESS_TOKEN',
     )
 
-    # If the authentication is successful, the response will contain an "AuthenticationResult"
-    authentication_result = response['AuthenticationResult']
-    access_token = authentication_result['AccessToken']
-    id_token = authentication_result['IdToken']
+    # The response contains temporary AWS credentials
+    access_key = response['roleCredentials']['accessKeyId']
+    secret_key = response['roleCredentials']['secretAccessKey']
+    session_token = response['roleCredentials']['sessionToken']
 
     print("Authentication successful!")
-    print("Access Token:", access_token)
-    print("ID Token:", id_token)
+    print("Access Key:", access_key)
+    print("Secret Key:", secret_key)
+    print("Session Token:", session_token)
 
-except client.exceptions.NotAuthorizedException as e:
-    print("Authentication failed. Incorrect username or password.")
-except client.exceptions.UserNotConfirmedException as e:
-    print("Authentication failed. User not confirmed.")
 except Exception as e:
     print("An error occurred:", str(e))
