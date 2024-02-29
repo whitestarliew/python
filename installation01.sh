@@ -55,6 +55,7 @@ echo "Docker installation complete!"
 #############################Install Jenkins ####################################### 
 # Install Java runtime for Jenkins
 sudo apt-get install -y openjdk-17-jre
+sudo apt-get install -y jenkins
 
 # Install Jenkins
 if apt install -y jenkins 2>/dev/null; then  # Suppress standard output to avoid cluttering
