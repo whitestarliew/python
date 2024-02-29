@@ -2,16 +2,16 @@
 
 
 ############################git installation ###############################
-sudo apt install git-all
+sudo apt -y install git-all
 
 
 ############################docker installation ################################
 # Check if root privileges are available
-if [[ $EUID -ne 0 ]]; then
-  # Prepend 'sudo' to the command if not root
-  sudo -E $*
-  exit 1
-fi
+# if [[ $EUID -ne 0 ]]; then
+#   # Prepend 'sudo' to the command if not root
+#   sudo -E $*
+#   exit 1
+# fi
 # Update package lists
 sudo apt -y update
 
