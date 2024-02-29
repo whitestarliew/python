@@ -1,5 +1,11 @@
 #!/bin/bash
 
+
+############################git installation ###############################
+sudo apt install git-all
+
+
+############################docker installation ################################
 # Check if root privileges are available
 if [[ $EUID -ne 0 ]]; then
   # Prepend 'sudo' to the command if not root
@@ -37,7 +43,7 @@ fi
 # Verify installation
 echo "Docker installation complete!"
 
-#################Install Jenkins ####################################### 
+#############################Install Jenkins ####################################### 
 # Install Java runtime for Jenkins
 sudo apt-get install -y openjdk-17-jre
 
@@ -69,3 +75,16 @@ else
   echo "Failed to install Grafana. Please check your script or system logs for errors."
   exit 1
 fi
+# Installs the latest Enterprise release:
+sudo apt-get -y install grafana-enterprise
+
+if sudo apt-get -y install grafana-enterprise 2>/dev/null; then 
+  echo "Grafana-enterprice installation successful!"
+else
+  echo "Failed to install Grafana-Enterprise. Please check your script or system logs for errors."
+  exit 1
+fi
+
+
+
+echo "Successfull install Docker, Jenkins, Grafana" 
