@@ -5,14 +5,32 @@
 sudo apt -y install git-all
 
 
+############################ Visual Code installation ######################
+sudo apt install apt-transport-https
+sudo apt update
+
+############################# Visual Code installation #####################
+sudo apt install code
+
+########################### Install python ##################################
+sudo apt install python3
+if ! command -v python3 &> /dev/null; then
+  echo "Python 3 is not installed. Installing..."
+  # Replace with the appropriate installation command for your operating system
+  sudo apt install python3  # Example for Ubuntu/Debian
+
+  if [[ $? -eq 0 ]]; then
+    echo "Successfully installed Python 3."
+  else
+    echo "Failed to install Python 3. Exiting..."
+    exit 1
+  fi
+fi
+
+
+sudo apt install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev wget
+
 ############################docker installation ################################
-# Check if root privileges are available
-# if [[ $EUID -ne 0 ]]; then
-#   # Prepend 'sudo' to the command if not root
-#   sudo -E $*
-#   exit 1
-# fi
-# Update package lists
 sudo apt -y update
 
 if sudo apt update -y; then  
@@ -97,4 +115,4 @@ fi
 
 
 
-echo "Successfull install Docker, Jenkins, Grafana" 
+echo "Successfull install Docker, Jenkins, Grafana, VS Code, Python" 
