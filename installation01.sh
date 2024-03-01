@@ -3,13 +3,13 @@
 touch check_version.txt
 ############################git installation ###############################
 sudo apt -y install git-all
-sudo git --version >> version.txt
+sudo git --version >> check_version.txt
 
 ############################ Visual Code installation ######################
 sudo apt -y install apt-transport-https
 sudo apt update
 sudo apt -y install code
-sudo code --version >> version.txt
+sudo code --version >> check_version.txt
 ########################### Python Installation##################################
 echo "Installing python..."
 sudo apt install python3
@@ -25,7 +25,7 @@ if ! command -v python3 &> /dev/null; then
     exit 1
   fi
 fi
-
+sudo python3 --version >> check_version.txt
 
 sudo apt install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev wget
 
@@ -43,10 +43,10 @@ for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker c
 
 #New docker installation 
 # Add Docker's official GPG key:
-sudo apt-get update
-sudo apt-get install ca-certificates curl
+sudo apt-get update -y
+sudo apt-get install ca-certificates curl -y
 sudo install -m 0755 -d /etc/apt/keyrings
-sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc -y
 sudo chmod a+r /etc/apt/keyrings/docker.asc
 
 # Add the repository to Apt sources:
@@ -66,6 +66,8 @@ else
   systemctl stop docker &> /dev/null
   exit 1
 fi
+
+sudo docker --version >> check_version.txt
 # Verify installation
 echo "Docker installation complete!"
 
@@ -75,7 +77,7 @@ echo "Docker installation complete!"
 sudo apt -y update
 sudo apt -y install fontconfig openjdk-17-jre
 
-java -version 
+java -version >> check_version.txt
 openjdk version "17.0.8" 2023-07-18
 OpenJDK Runtime Environment (build 17.0.8+7-Debian-1deb12u1)
 OpenJDK 64-Bit Server VM (build 17.0.8+7-Debian-1deb12u1, mixed mode, sharing)
@@ -95,9 +97,22 @@ else
   exit 1
 fi
 
-###### GRAFANA INSTALLATION ################
-
+######################## GRAFANA INSTALLATION ################
+sudo apt-get install -y apt-transport-https software-properties-common wget
+#import GPG key 
+sudo mkdir -p /etc/apt/keyrings/
+wget -q -O - https://apt.grafana.com/gpg.key | gpg --dearmor | sudo tee /etc/apt/keyrings/grafana.gpg > /dev/null
+#Add repo to stable release
+echo "deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://apt.grafana.com stable main" | sudo tee -a /etc/apt/sources.list.d/grafana.list
+#add repo to beta release 
+echo "deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://apt.grafana.com beta main" | sudo tee -a /etc/apt/sources.list.d/grafana.list
+# Updates the list of available packages
+sudo apt-get update -y
 # Installs the latest OSS release:
+sudo apt-get install grafana -y 
+# Installs the latest Enterprise release:
+sudo apt-get install grafana-enterprise
+
 
 ###################### Micro kubernetes installation #########
 sudo snap install microk8s --classic
@@ -114,7 +129,7 @@ sudo microk8s kubectl get all --all-namespaces
 
 
 ######################### terraform installation ####################################
-sudo apt-get update && sudo apt-get install -y gnupg software-properties-common
+sudo apt-get update -y && sudo apt-get install -y gnupg software-properties-common
 # install GPG key Hashicorp 
 wget -O- https://apt.releases.hashicorp.com/gpg | \
 gpg --dearmor | \
@@ -124,7 +139,7 @@ gpg --no-default-keyring \
 --keyring /usr/share/keyrings/hashicorp-archive-keyring.gpg \
 --fingerprint
 #Add repo to your system 
-echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] \
+sudo echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] \
 https://apt.releases.hashicorp.com $(lsb_release -cs) main" | \
 sudo tee /etc/apt/sources.list.d/hashicorp.list
 sudo apt update -y 
@@ -132,4 +147,14 @@ sudo apt-get install terraform -y
 #Enable tab 
 sudo touch ~/.bashrc
 sudo terraform -install-autocomplete
+terraform --version >> check_version.txt
+
+######################### Ansible installation #################################
+sudo apt update -y
+sudo apt install software-properties-common -y
+sudo add-apt-repository --yes --update ppa:ansible/ansible
+sudo apt install ansible -y
+sudo ansible --version >> check_version.txt
 echo "Successfull install Docker, Jenkins, Grafana, VS Code, Python" 
+
+cat check_version.txt
