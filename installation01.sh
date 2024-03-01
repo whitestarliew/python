@@ -148,10 +148,6 @@ sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyring
 sudo chmod a+r /etc/apt/keyrings/docker.asc
 
 # Ensure script is run with root privileges (use with caution)
-if [[ $EUID -ne 0 ]]; then
-  echo "This script requires root privileges. Please run it with sudo."
-  exit 1
-fi
 # Define the Docker repository and key download URL
 repo_url="https://download.docker.com/linux/ubuntu"
 key_url="https://download.docker.com/linux/ubuntu/gpg"
