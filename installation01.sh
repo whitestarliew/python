@@ -39,16 +39,6 @@ sudo apt install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-
 
 ############################docker installation ################################
 sudo apt -y update
-
-if sudo apt update -y; then  
-  echo "Update successful!"
-else
-  echo "Failed to update package lists. Please check your network connection or system logs for errors."
-  exit 1  # Stop the script if update fails
-fi
-
-for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
-
 #New docker installation 
 # Add Docker's official GPG key:
 sudo apt-get update -y
