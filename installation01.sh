@@ -45,10 +45,10 @@ sudo apt -y install fontconfig openjdk-17-jre
 
 java -version >> check_version.txt
 # Ensure script is run with root privileges (use with caution)
-if [[ $EUID -ne 0 ]]; then
-  echo "This script requires root privileges. Please run it with sudo."
-  exit 1
-fi
+# if [[ $EUID -ne 0 ]]; then
+#   echo "This script requires root privileges. Please run it with sudo."
+#   exit 1
+# fi
 
 # Define the key download URL and package source list URL
 key_url="https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key"
