@@ -5,9 +5,17 @@ touch check_version.txt
 sudo apt -y install git-all
 sudo git --version >> check_version.txt
 
+############################SSH installation #################################
+sudo apt install openssh-client -y
+########################## Remove thunderbird ################################
+sudo apt-get purge thunderbird* -y
+
+
+###########################homebrew installation ###########################
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ############################ Visual Code installation ######################
 sudo apt -y install apt-transport-https
-sudo apt update
+sudo apt update -y 
 sudo apt -y install code
 sudo code --version >> check_version.txt
 ########################### Python Installation##################################
@@ -155,6 +163,13 @@ sudo apt install software-properties-common -y
 sudo add-apt-repository --yes --update ppa:ansible/ansible
 sudo apt install ansible -y
 sudo ansible --version >> check_version.txt
+
+dh -h | head -4 >> check_version.txt
+
 echo "Successfull install Docker, Jenkins, Grafana, VS Code, Python" 
 
+############################## AWSCLI installation ##############################
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
 cat check_version.txt
