@@ -3,12 +3,14 @@
 touch check_version.txt
 ############################git installation ###############################
 sudo apt -y install git-all
-sudo git --version >> check_version.txt
+sudo git --version | head -1 >> check_version.txt
 
 ############################SSH installation #################################
 sudo apt install openssh-client -y
 ########################## Remove thunderbird ################################
 sudo apt-get purge thunderbird* -y
+sudo apt-get purge rhythmbox -y 
+sudo apt-get autoremove
 
 
 ###########################homebrew installation ###########################
@@ -33,7 +35,7 @@ if ! command -v python3 &> /dev/null; then
     exit 1
   fi
 fi
-sudo python3 --version >> check_version.txt
+sudo python3 --version | head -1 >> check_version.txt
 
 sudo apt install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev wget
 
