@@ -1,18 +1,17 @@
 #!/bin/bash
 
-
+touch check_version.txt
 ############################git installation ###############################
 sudo apt -y install git-all
-
+sudo git --version >> version.txt
 
 ############################ Visual Code installation ######################
-sudo apt install apt-transport-https
+sudo apt -y install apt-transport-https
 sudo apt update
-
-############################# Visual Code installation #####################
-sudo apt install code
-
-########################### Install python ##################################
+sudo apt -y install code
+sudo code --version >> version.txt
+########################### Python Installation##################################
+echo "Installing python..."
 sudo apt install python3
 if ! command -v python3 &> /dev/null; then
   echo "Python 3 is not installed. Installing..."
@@ -72,13 +71,24 @@ echo "Docker installation complete!"
 
 #############################Install Jenkins ####################################### 
 # Install Java runtime for Jenkins
-sudo apt-get install -y openjdk-17-jre
 
-curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo tee /usr/share/keyrings/jenkins-keyring.asc > /dev/null
-echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/ | sudo tee /etc/apt/sources.list.d/jenkins.list > /dev/null
-sudo apt-get install -y jenkins
+sudo apt -y update
+sudo apt -y install fontconfig openjdk-17-jre
+
+java -version 
+openjdk version "17.0.8" 2023-07-18
+OpenJDK Runtime Environment (build 17.0.8+7-Debian-1deb12u1)
+OpenJDK 64-Bit Server VM (build 17.0.8+7-Debian-1deb12u1, mixed mode, sharing)
+sudo wget -O /usr/share/keyrings/jenkins-keyring.asc \
+  https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
+  https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
+  /etc/apt/sources.list.d/jenkins.list > /dev/null
+sudo apt-get update
+sudo apt-get install jenkins -y
+sudo cat /var/lib/jenkins/secrets/initialAdminPassword >> check_version.txt
 # Install Jenkins
-if apt install -y jenkins 2>/dev/null; then  # Suppress standard output to avoid cluttering
+if apt-get install  jenkins -y 2>/dev/null; then  # Suppress standard output to avoid cluttering
   echo "Jenkins installation complete!"
 else
   echo "Jenkins installation failed. Please check your script or system logs for errors."
@@ -86,35 +96,40 @@ else
 fi
 
 ###### GRAFANA INSTALLATION ################
-sudo apt-get install -y apt-transport-https software-properties-common wget
-sudo mkdir -p /etc/apt/keyrings/
-wget -q -O - https://apt.grafana.com/gpg.key | gpg --dearmor | sudo tee /etc/apt/keyrings/grafana.gpg > /dev/null
-
-echo "deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://apt.grafana.com stable main" | sudo tee -a /etc/apt/sources.list.d/grafana.list
-echo "deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://apt.grafana.com beta main" | sudo tee -a /etc/apt/sources.list.d/grafana.list
-echo "deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://apt.grafana.com beta main" | sudo tee -a /etc/apt/sources.list.d/grafana.list
-
-sudo apt-get update
 
 # Installs the latest OSS release:
-apt-get -y install grafana
 
-if apt install -y grafana 2>/dev/null; then  # Suppress standard output
-  echo "Grafana installation successful!"
-else
-  echo "Failed to install Grafana. Please check your script or system logs for errors."
-  exit 1
-fi
-# Installs the latest Enterprise release:
-sudo apt-get -y install grafana-enterprise
-
-if sudo apt-get -y install grafana-enterprise 2>/dev/null; then 
-  echo "Grafana-enterprice installation successful!"
-else
-  echo "Failed to install Grafana-Enterprise. Please check your script or system logs for errors."
-  exit 1
-fi
+###################### Micro kubernetes installation #########
+sudo snap install microk8s --classic
+sudo usermod -a -G microk8s $USER 
+sudo microk8s status --wait-ready
+#Turn on the service you want 
+sudo microk8s enable dashboard
+sudo microk8s enable community -y 
+sudo microk8s enable dns
+sudo microk8s enable registry
+sudo microk8s enable istio 
+sudo microk8s kubectl get all --all-namespaces
+# sudo microk8s dashboard-proxy
 
 
-
+######################### terraform installation ####################################
+sudo apt-get update && sudo apt-get install -y gnupg software-properties-common
+# install GPG key Hashicorp 
+wget -O- https://apt.releases.hashicorp.com/gpg | \
+gpg --dearmor | \
+sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg
+#Verification 
+gpg --no-default-keyring \
+--keyring /usr/share/keyrings/hashicorp-archive-keyring.gpg \
+--fingerprint
+#Add repo to your system 
+echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] \
+https://apt.releases.hashicorp.com $(lsb_release -cs) main" | \
+sudo tee /etc/apt/sources.list.d/hashicorp.list
+sudo apt update -y 
+sudo apt-get install terraform -y 
+#Enable tab 
+sudo touch ~/.bashrc
+sudo terraform -install-autocomplete
 echo "Successfull install Docker, Jenkins, Grafana, VS Code, Python" 
