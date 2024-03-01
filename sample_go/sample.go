@@ -3,7 +3,7 @@ package main
 import "fmt"
 
 func main() {
-	var conferenceName = "Go conference"
+	conferenceName := "Go conference"
 	const priceTicket = 20
 	var remainingTickets = 34
 	fmt.Printf("Hello World %v", conferenceName)
@@ -12,6 +12,7 @@ func main() {
 
 	var userName string
 	var ticketmoney int
+	fmt.Scan()
 	userName = "Ronaldo"
 	ticketmoney = 99
 	fmt.Println(userName)

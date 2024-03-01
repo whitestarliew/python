@@ -66,7 +66,7 @@ sudo cat /var/lib/jenkins/secrets/initialAdminPassword >> check_version.txt
 if apt-get install  jenkins -y 2>/dev/null; then  # Suppress standard output to avoid cluttering
   echo "Jenkins installation complete!"
 else
-  echo "Jenkins installation failed. Please check your script or system logs for errors."
+  echo "Jenkins installation failed."
   exit 1
 fi
 
@@ -140,23 +140,26 @@ sudo ./aws/install
 cat check_version.txt
 
 ############################docker installation ################################
-# Add Docker's official GPG key:
+# Update package lists and install dependencies (may not be necessary)
 sudo apt-get update -y
-sudo apt-get install ca-certificates curl -y
-sudo install -m 0755 -d /etc/apt/keyrings
-sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
-sudo chmod a+r /etc/apt/keyrings/docker.asc
+sudo apt-get install ca-certificates curl gnupg -y
 
-# Ensure script is run with root privileges (use with caution)
-# Define the Docker repository and key download URL
-repo_url="https://download.docker.com/linux/ubuntu"
-key_url="https://download.docker.com/linux/ubuntu/gpg"
+# Create the keyrings directory with appropriate permissions
+sudo install -m 0755 -d /etc/apt/keyrings
+
 # Download the Docker GPG key
-wget -qO- "$key_url" | sudo apt-key add -
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+
+# Ensure the downloaded key file has correct permissions
+sudo chmod 644 /etc/apt/keyrings/docker.asc
+
 # Add the Docker repository to Apt sources
-echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] $repo_url $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-sudo apt-get update -y 
-# Start Docker service
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+# Update the package list again
+sudo apt-get update -y
+
+# Start the Docker service
 sudo systemctl start docker
 
 if systemctl status docker | grep "active (running)" &> /dev/null; then
