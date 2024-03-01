@@ -44,13 +44,21 @@ sudo apt -y update
 sudo apt -y install fontconfig openjdk-17-jre
 
 java -version >> check_version.txt
+# Ensure script is run with root privileges (use with caution)
+if [[ $EUID -ne 0 ]]; then
+  echo "This script requires root privileges. Please run it with sudo."
+  exit 1
+fi
 
-
-sudo wget -O /usr/share/keyrings/jenkins-keyring.asc \
-  https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
-echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
-  https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
-  /etc/apt/sources.list.d/jenkins.list > /dev/null
+# Define the key download URL and package source list URL
+key_url="https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key"
+source_url="https://pkg.jenkins.io/debian-stable binary/"
+# Download the Jenkins key
+wget -O /usr/share/keyrings/jenkins-keyring.asc "$key_url"
+# Add the Jenkins repository to sources list
+echo "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] $source_url" | sudo tee /etc/apt/sources.list.d/jenkins.list > /dev/null
+# Inform the user of successful execution (optional)
+echo "Jenkins key downloaded and repository added successfully."
 sudo apt-get update
 sudo apt-get install jenkins -y
 sudo cat /var/lib/jenkins/secrets/initialAdminPassword >> check_version.txt
@@ -132,15 +140,26 @@ sudo ./aws/install
 cat check_version.txt
 
 ############################docker installation ################################
-sudo apt -y update
-#New docker installation 
 # Add Docker's official GPG key:
-sudo apt-get -y install ca-certificates curl
+sudo apt-get update -y
+sudo apt-get install ca-certificates curl -y
 sudo install -m 0755 -d /etc/apt/keyrings
 sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
 sudo chmod a+r /etc/apt/keyrings/docker.asc
-sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
+# Ensure script is run with root privileges (use with caution)
+if [[ $EUID -ne 0 ]]; then
+  echo "This script requires root privileges. Please run it with sudo."
+  exit 1
+fi
+# Define the Docker repository and key download URL
+repo_url="https://download.docker.com/linux/ubuntu"
+key_url="https://download.docker.com/linux/ubuntu/gpg"
+# Download the Docker GPG key
+wget -qO- "$key_url" | sudo apt-key add -
+# Add the Docker repository to Apt sources
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] $repo_url $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update -y 
 # Start Docker service
 sudo systemctl start docker
 
