@@ -37,32 +37,6 @@ sudo python3 --version >> check_version.txt
 
 sudo apt install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev wget
 
-############################docker installation ################################
-sudo apt -y update
-#New docker installation 
-# Add Docker's official GPG key:
-sudo apt-get update
-sudo apt-get install ca-certificates curl
-sudo install -m 0755 -d /etc/apt/keyrings
-sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
-sudo chmod a+r /etc/apt/keyrings/docker.asc
-sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-
-# Start Docker service
-sudo systemctl start docker
-
-if systemctl status docker | grep "active (running)" &> /dev/null; then
-  echo "Docker installation complete!"
-else
-  echo "Failed to start Docker service. Please check your script or system logs for errors."
-  systemctl stop docker &> /dev/null
-  exit 1
-fi
-
-sudo docker --version >> check_version.txt
-# Verify installation
-echo "Docker installation complete!"
-
 #############################Install Jenkins ####################################### 
 # Install Java runtime for Jenkins
 
@@ -70,9 +44,8 @@ sudo apt -y update
 sudo apt -y install fontconfig openjdk-17-jre
 
 java -version >> check_version.txt
-openjdk version "17.0.8" 2023-07-18
-OpenJDK Runtime Environment (build 17.0.8+7-Debian-1deb12u1)
-OpenJDK 64-Bit Server VM (build 17.0.8+7-Debian-1deb12u1, mixed mode, sharing)
+
+
 sudo wget -O /usr/share/keyrings/jenkins-keyring.asc \
   https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
 echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
@@ -103,10 +76,10 @@ sudo apt-get update -y
 # Installs the latest OSS release:
 sudo apt-get install grafana -y 
 # Installs the latest Enterprise release:
-sudo apt-get install grafana-enterprise
+sudo apt-get install grafana-enterprise -y
 
 
-###################### Micro kubernetes installation #########
+###################### Micro kubernetes installation ##############################
 sudo snap install microk8s --classic
 sudo usermod -a -G microk8s $USER 
 sudo microk8s status --wait-ready
@@ -157,3 +130,28 @@ curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip
 unzip awscliv2.zip
 sudo ./aws/install
 cat check_version.txt
+
+############################docker installation ################################
+sudo apt -y update
+#New docker installation 
+# Add Docker's official GPG key:
+sudo apt-get -y install ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+# Start Docker service
+sudo systemctl start docker
+
+if systemctl status docker | grep "active (running)" &> /dev/null; then
+  echo "Docker installation complete!"
+else
+  echo "Failed to start Docker service. Please check your script or system logs for errors."
+  systemctl stop docker &> /dev/null
+  exit 1
+fi
+
+sudo docker --version >> check_version.txt
+# Verify installation
+echo "Docker installation complete!"
